@@ -1,0 +1,71 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+tmp/
+.tmp/
+
+# Environment and local overrides
+.env
+.env.*
+*.local
+
+# Terraform and infrastructure state
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Cloud and deployment tooling
+.aws/
+.azure/
+.gcp/
+.kube/
+*.pem
+*.key
+*.p12
+*.crt
+
+# Package managers and tool caches
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.turbo/
+.cache/
+
+# Python artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Build and coverage output
+dist/
+build/
+coverage/
+
+# Archive bundles
+*.zip
+*.tar
+*.tar.gz
+
+# Keep generated pipeline artifacts out of git
+artifacts/
+reports/

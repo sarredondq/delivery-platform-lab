@@ -1,0 +1,17 @@
+parameters:
+  - name: requiredPaths
+    type: object
+    default: []
+
+steps:
+  - ${{ each path in parameters.requiredPaths }}:
+    - bash: |
+        set -euo pipefail
+
+        if [ ! -e "${{ path }}" ]; then
+          echo "Missing required path: ${{ path }}"
+          exit 1
+        fi
+
+        echo "Found required path: ${{ path }}"
+      displayName: Check ${{ path }}
