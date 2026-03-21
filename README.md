@@ -1,96 +1,170 @@
-## delivery-platform-lab
+# delivery-platform-lab
 
-Monorepo orientado a arquitectura de entrega continua, automatizacion operativa y despliegues multi-cloud.
+`delivery-platform-lab` is a monorepo for learning how CI/CD platforms can coexist around a shared delivery architecture. It provides a clean foundation for pipeline orchestration, reusable automation, environment contracts, and multi-cloud deployment planning across tools such as Azure DevOps, Jenkins, and GitHub Actions.
 
-### Proposito
+## Purpose
 
-`delivery-platform-lab` nace como un laboratorio de plataforma para centralizar pipelines, componentes reutilizables y definiciones operativas que despues puedan evolucionar hacia una plataforma de entrega mas formal. La idea no es guardar pipelines sueltos, sino construir una base coherente para CI/CD, release engineering, politicas de despliegue y automatizacion de entornos.
+This repository is designed as a platform engineering lab rather than a collection of isolated pipelines. The goal is to centralize reusable delivery building blocks, operational conventions, and deployment structure so the repository can evolve into a more formal delivery platform over time.
 
-### Objetivos
+## Goals
 
-- Tener una unica raiz para automatizacion de entrega, despliegues y tooling compartido.
-- Separar claramente definiciones de pipeline, modulos reutilizables y artefactos de entorno.
-- Facilitar un modelo multi-cloud donde la logica comun viva en un lugar y las diferencias por proveedor queden aisladas.
-- Permitir que Azure DevOps, GitHub Actions y Jenkins convivan sin mezclar responsabilidades.
-- Preparar el repo para crecer desde validaciones basicas hacia pipelines de release y despliegue mas completos.
+- Keep a single root for delivery automation, deployment structure, and shared tooling.
+- Separate CI engine definitions from reusable modules and environment-specific assets.
+- Support a multi-cloud operating model where shared logic lives in one place and provider-specific differences stay isolated.
+- Allow Azure DevOps, GitHub Actions, and Jenkins to coexist without mixing responsibilities.
+- Prepare the repository to grow from structural validation into fuller release and deployment workflows.
 
-### Layout del repositorio
+## Platform Documentation
 
-- `.github/workflows/`: automatizaciones especificas de GitHub Actions.
-- `azure-devops/`: templates, convenciones y definiciones auxiliares para Azure DevOps.
-- `azure-devops/pipelines/`: pipelines dedicados para validacion ambiental y planeamiento multi-cloud.
-- `jenkins/`: pipelines declarativos y shared libraries para Jenkins.
-- `deployments/`: automatizacion de despliegue por plataforma, cloud o capacidad transversal.
-- `environments/`: overlays, variables y entradas de despliegue por ambiente.
-- `platform/`: tooling operativo, scripts y utilidades compartidas por pipelines.
-- `modules/`: piezas reutilizables para composicion de automatizacion e infraestructura.
-- `docs/`: decisiones, notas de arquitectura y documentacion de soporte.
+- [Azure DevOps docs](docs/azure-devops/README.md)
+- [Jenkins docs](docs/jenkins/README.md)
 
-### Direccion del workflow
+## Repository Structure
 
-La direccion buscada es simple: cada tecnologia de CI orquesta desde su dominio, pero la logica reusable no deberia duplicarse en cada motor. Cuando una automatizacion deja de ser puntual y empieza a repetirse, se mueve a `platform/` o `modules/`. De esa forma el monorepo funciona como capa de orquestacion y tambien como catalogo de capacidades compartidas.
+The current repository layout is intentionally minimal. Empty directories keep `.gitkeep` placeholders so the structure remains versioned and visible while the lab grows.
 
-Un flujo esperado para cambios futuros seria:
+```text
+delivery-platform-lab/
+├── .github/
+│   └── workflows/
+│       └── .gitkeep
+├── azure-devops/
+│   ├── pipelines/
+│   │   ├── .gitkeep
+│   │   ├── environment-validation.yml
+│   │   └── multicloud-deployment-plan.yml
+│   └── templates/
+│       ├── .gitkeep
+│       ├── check-required-paths.yml
+│       ├── multicloud-plan-stage.yml
+│       ├── validate-environment-stage.yml
+│       └── validate-monorepo.yml
+├── deployments/
+│   ├── aws/
+│   │   └── .gitkeep
+│   ├── azure/
+│   │   └── .gitkeep
+│   ├── common/
+│   │   └── .gitkeep
+│   └── gcp/
+│       └── .gitkeep
+├── docs/
+│   ├── .gitkeep
+│   ├── azure-devops/
+│   │   └── README.md
+│   └── jenkins/
+│       └── README.md
+├── environments/
+│   ├── dev/
+│   │   └── .gitkeep
+│   ├── prod/
+│   │   └── .gitkeep
+│   └── staging/
+│       └── .gitkeep
+├── jenkins/
+│   ├── pipelines/
+│   │   └── .gitkeep
+│   └── shared-libraries/
+│       └── .gitkeep
+├── modules/
+│   └── shared/
+│       └── .gitkeep
+├── platform/
+│   ├── scripts/
+│   │   └── .gitkeep
+│   └── tooling/
+│       └── .gitkeep
+├── .gitignore
+├── azure-pipelines.yml
+└── README.md
+```
 
-1. Definir la necesidad del pipeline o del despliegue.
-2. Implementar la entrada minima en el motor correspondiente.
-3. Extraer pasos comunes a templates o modulos reutilizables.
-4. Versionar convenciones de entorno en `environments/`.
-5. Escalar desde validacion a promotion, release y despliegue segun madure el caso.
+### What Each Path Is For
 
-### Azure DevOps dentro del monorepo
+- `.github/workflows/` stores GitHub Actions workflows when repository-level automation is needed.
+- `azure-devops/` contains Azure DevOps-specific pipelines and reusable templates.
+- `azure-devops/pipelines/environment-validation.yml` validates the expected structure for `dev`, `staging`, and `prod`.
+- `azure-devops/pipelines/multicloud-deployment-plan.yml` previews the intended AWS, Azure, and GCP delivery flow without deploying anything.
+- `azure-devops/templates/` holds reusable Azure DevOps building blocks for path validation and stage composition.
+- `deployments/common/` is reserved for shared deployment assets used across cloud targets.
+- `deployments/aws/`, `deployments/azure/`, and `deployments/gcp/` isolate provider-specific deployment logic.
+- `docs/` contains supporting documentation and platform-focused documentation sections.
+- `docs/azure-devops/` is the documentation entry point for Azure DevOps-related guidance in this lab.
+- `docs/jenkins/` is the documentation entry point for Jenkins-related guidance in this lab.
+- `environments/dev/`, `environments/staging/`, and `environments/prod/` hold environment-specific overlays, values, and future deployment inputs.
+- `jenkins/` is reserved for Jenkins pipelines and shared library assets.
+- `modules/shared/` is for reusable automation or infrastructure modules that should not belong to a single CI engine.
+- `platform/scripts/` stores shared operational scripts used by pipelines.
+- `platform/tooling/` is for platform-level helper utilities and support tooling.
+- `azure-pipelines.yml` is the main Azure DevOps entry point for validating the repository baseline.
+- `.gitignore` defines repository ignore rules.
+- `README.md` documents the repository purpose, structure, and operating model.
 
-Azure DevOps entra en el repo como uno de los motores de orquestacion principales, no como un agregado aislado. Su rol inicial es ofrecer una base de pipeline reutilizable para validar que el monorepo mantiene una estructura esperada y que las capacidades comunes pueden componerse desde templates.
+## Operating Direction
 
-La convencion inicial queda asi:
+The intended direction is simple: each CI platform orchestrates from its own domain, but reusable delivery logic should not be duplicated in every engine. When automation stops being one-off and starts repeating, it should move into `platform/` or `modules/`. That keeps the monorepo useful both as an orchestration layer and as a catalog of shared delivery capabilities.
 
-- `azure-pipelines.yml`: punto de entrada raiz para Azure DevOps.
-- `azure-devops/templates/`: templates reutilizables para jobs o steps comunes.
-- `azure-devops/pipelines/`: pipelines dedicados por capacidad, ambiente o dominio operativo.
+An expected evolution flow for future changes looks like this:
 
-### Starter inicial de Azure DevOps
+1. Define the pipeline or deployment need.
+2. Implement the minimum entry point in the appropriate CI engine.
+3. Extract repeated steps into reusable templates or modules.
+4. Version environment conventions in `environments/`.
+5. Grow from validation into promotion, release, and deployment flows as the lab matures.
 
-La base actual queda dividida en tres entradas complementarias:
+## Azure DevOps in This Monorepo
 
-- `azure-pipelines.yml`: pipeline raiz que valida el contrato estructural del monorepo y exige que existan los pipelines base de Azure DevOps.
-- `azure-devops/pipelines/environment-validation.yml`: pipeline dedicada a validar la estructura esperada para `dev`, `staging` y `prod`.
-- `azure-devops/pipelines/multicloud-deployment-plan.yml`: pipeline dedicada a validar la base multi-cloud y publicar un preview del flujo AWS, Azure y GCP sin desplegar nada.
+Azure DevOps is one of the primary orchestration engines in the repository, not an isolated add-on. Its current role is to provide a reusable pipeline baseline that validates the expected monorepo structure and demonstrates how common capabilities can be composed through templates.
 
-Los tres comparten templates pequenos para chequeo de rutas y mantienen el enfoque de foundation: validar estructura, expresar flujo e impedir drift temprano.
+The current Azure DevOps convention is:
 
-#### Environment validation pipeline
+- `azure-pipelines.yml` as the root Azure DevOps entry point.
+- `azure-devops/templates/` for reusable jobs and shared steps.
+- `azure-devops/pipelines/` for pipelines organized by capability, environment, or operating domain.
 
-Esta pipeline existe para sostener el contrato minimo por ambiente. Para cada uno de `dev`, `staging` y `prod` valida:
+## Current Azure DevOps Starter
 
-- que el overlay del ambiente exista en `environments/<ambiente>/`;
-- que el placeholder versionado siga presente para evitar directorios vacios invisibles;
-- que la base compartida de entrega (`deployments/common`, `platform/scripts`, `modules/shared`) siga disponible.
+The current foundation is split into three complementary entry points:
 
-No compila, no empaqueta y no despliega. Su unica responsabilidad es frenar cambios que rompan la estructura minima esperada por ambiente.
+- `azure-pipelines.yml` validates the structural contract of the monorepo and requires the core Azure DevOps pipelines to exist.
+- `azure-devops/pipelines/environment-validation.yml` validates the expected baseline for `dev`, `staging`, and `prod`.
+- `azure-devops/pipelines/multicloud-deployment-plan.yml` validates the multi-cloud foundation and publishes a preview of the AWS, Azure, and GCP flow without performing any deployment.
 
-#### Multi-cloud deployment plan pipeline
+All three rely on small reusable templates for path checks and keep the current focus on fundamentals: validate structure, express flow, and prevent early drift.
 
-Esta pipeline modela el flujo futuro sin pedir credenciales reales. Primero valida la fundacion comun y luego corre tres previews independientes:
+### Environment Validation Pipeline
 
-- AWS: comprueba `deployments/aws` junto con overlays `dev`, `staging` y `prod`.
-- Azure: comprueba `deployments/azure` junto con overlays `dev`, `staging` y `prod`.
-- GCP: comprueba `deployments/gcp` junto con overlays `dev`, `staging` y `prod`.
+This pipeline exists to protect the minimum environment contract. For each of `dev`, `staging`, and `prod`, it validates that:
 
-Cada preview deja trazado en logs el orden intencional `common -> cloud -> environments`, con `credentials=not-required` y `deployment=disabled`. Eso permite socializar la arquitectura antes de conectar providers reales.
+- the environment overlay exists in `environments/<environment>/`;
+- the versioned placeholder remains present so empty directories stay visible in Git;
+- the shared delivery baseline (`deployments/common`, `platform/scripts`, and `modules/shared`) is still available.
 
-#### Uso rapido
+It does not build, package, or deploy. Its only job is to stop changes that break the minimum structure expected by each environment.
 
-1. Crear un pipeline en Azure DevOps apuntando al archivo raiz `azure-pipelines.yml`.
-2. Mantener la rama principal como `main` para respetar triggers y PR validation.
-3. Crear pipelines adicionales apuntando a `azure-devops/pipelines/environment-validation.yml` y `azure-devops/pipelines/multicloud-deployment-plan.yml` cuando quieras separarlas por responsabilidad.
-4. Ajustar las listas `requiredPaths` en los YAML correspondientes cuando el contrato estructural del monorepo cambie.
-5. Agregar nuevos templates en `azure-devops/templates/` cuando aparezcan patrones repetidos.
+### Multi-Cloud Deployment Plan Pipeline
 
-### Criterios de crecimiento
+This pipeline models the future delivery flow without requiring real credentials. It first validates the shared foundation and then runs three independent previews:
 
-Antes de agregar mas automatizacion, conviene sostener estas reglas:
+- AWS: checks `deployments/aws` together with the `dev`, `staging`, and `prod` overlays.
+- Azure: checks `deployments/azure` together with the `dev`, `staging`, and `prod` overlays.
+- GCP: checks `deployments/gcp` together with the `dev`, `staging`, and `prod` overlays.
 
-- no mezclar configuracion de entornos con logica de pipeline;
-- no duplicar pasos identicos entre motores de CI;
-- mantener cada template pequeno, auditable y facil de recombinar;
-- usar `docs/` para registrar decisiones cuando aparezcan variantes por cloud, producto o compliance.
+Each preview writes the intended order `common -> cloud -> environments` to the logs with `credentials=not-required` and `deployment=disabled`. That makes the target architecture visible before real cloud providers are connected.
+
+### Quick Start
+
+1. Create an Azure DevOps pipeline that points to the root `azure-pipelines.yml` file.
+2. Keep the default branch as `main` so triggers and pull request validation stay aligned.
+3. Create additional pipelines for `azure-devops/pipelines/environment-validation.yml` and `azure-devops/pipelines/multicloud-deployment-plan.yml` if you want to separate responsibilities.
+4. Update the `requiredPaths` lists in the YAML files whenever the monorepo structural contract changes.
+5. Add new templates in `azure-devops/templates/` when repeated patterns emerge.
+
+## Growth Criteria
+
+As the lab grows, these rules should stay in place:
+
+- do not mix environment configuration with pipeline logic;
+- do not duplicate identical steps across CI engines;
+- keep each template small, auditable, and easy to recombine;
+- use `docs/` to record architecture decisions when cloud, product, or compliance variants appear.
