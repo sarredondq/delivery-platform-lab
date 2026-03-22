@@ -1,6 +1,6 @@
 # CI Pipeline — Web
 # Trigger: Pull requests targeting main that touch apps/web/
-# Purpose: Install, test, verify code quality, verify build
+# Purpose: Install, test, SonarCloud analysis, build, verify code quality
 # Equivalent to: pipelines/azure-devops/ci/web-ci.yml
 
 name: 'Web - Continuous Integration'
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js and install dependencies
         uses: ./.github/actions/setup-node-app
@@ -29,6 +31,13 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           working-directory: apps/web
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        with:
+          projectBaseDir: apps/web
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Verify build
         run: npm run build

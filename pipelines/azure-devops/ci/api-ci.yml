@@ -1,6 +1,6 @@
 # CI Pipeline — API
 # Trigger: Pull requests targeting main that touch apps/api/
-# Purpose: Install, test, verify code quality
+# Purpose: Install, test, SonarCloud analysis, verify code quality
 
 trigger: none
 
@@ -17,4 +17,6 @@ jobs:
     parameters:
       appName: api
       appPath: apps/api
-      runBuild: false  # API is plain JS — no build step needed
+      runBuild: false
+      sonarProjectKey: ghactions-delivery-platform-api
+      sonarProjectName: ghactions-delivery-platform-api
