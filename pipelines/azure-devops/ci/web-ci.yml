@@ -1,6 +1,6 @@
 # CI Pipeline — Web
 # Trigger: Pull requests targeting main that touch apps/web/
-# Purpose: Install, test, build, verify code quality
+# Purpose: Install, test, SonarCloud analysis, build, verify code quality
 
 trigger: none
 
@@ -17,4 +17,6 @@ jobs:
     parameters:
       appName: web
       appPath: apps/web
-      runBuild: true  # Web app needs tsc + vite build
+      runBuild: true
+      sonarProjectKey: ghactions-delivery-platform-web
+      sonarProjectName: ghactions-delivery-platform-web

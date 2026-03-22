@@ -1,6 +1,6 @@
 # CI Pipeline — API
 # Trigger: Pull requests targeting main that touch apps/api/
-# Purpose: Install, test, verify code quality
+# Purpose: Install, test, SonarCloud analysis, verify code quality
 # Equivalent to: pipelines/azure-devops/ci/api-ci.yml
 
 name: 'API - Continuous Integration'
@@ -11,6 +11,9 @@ on:
     paths:
       - 'apps/api/**'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     name: Test
@@ -19,6 +22,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js and install dependencies
         uses: ./.github/actions/setup-node-app
@@ -29,3 +34,10 @@ jobs:
         uses: ./.github/actions/run-tests
         with:
           working-directory: apps/api
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        with:
+          projectBaseDir: apps/api
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,5 +1,5 @@
 # Job template: CI pipeline for a Node.js application
-# Usage: Installs deps, runs tests, and optionally builds the app
+# Usage: Installs deps, runs tests, optionally runs SonarCloud analysis, and optionally builds
 
 parameters:
   - name: appName
@@ -12,6 +12,12 @@ parameters:
   - name: runBuild
     type: boolean
     default: false
+  - name: sonarProjectKey
+    type: string
+    default: ''
+  - name: sonarProjectName
+    type: string
+    default: ''
 
 jobs:
   - job: CI_${{ parameters.appName }}
@@ -20,6 +26,7 @@ jobs:
       vmImage: 'ubuntu-latest'
     steps:
       - checkout: self
+        fetchDepth: 0
 
       - template: ../steps/install-node.yml
         parameters:
@@ -29,6 +36,13 @@ jobs:
       - template: ../steps/run-tests.yml
         parameters:
           workingDirectory: ${{ parameters.appPath }}
+
+      - ${{ if ne(parameters.sonarProjectKey, '') }}:
+          - template: ../steps/sonar-analysis.yml
+            parameters:
+              projectKey: ${{ parameters.sonarProjectKey }}
+              projectName: ${{ parameters.sonarProjectName }}
+              workingDirectory: ${{ parameters.appPath }}
 
       - ${{ if eq(parameters.runBuild, true) }}:
           - template: ../steps/build-app.yml
