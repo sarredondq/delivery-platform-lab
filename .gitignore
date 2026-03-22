@@ -17,6 +17,8 @@ tmp/
 
 # Environment and local overrides
 .env
+.env.local
+.env.*.local
 .env.*
 *.local
 
@@ -25,6 +27,7 @@ tmp/
 .terraform.lock.hcl
 *.tfstate
 *.tfstate.*
+*.tfstate.backup
 crash.log
 override.tf
 override.tf.json

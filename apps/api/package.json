@@ -1,0 +1,43 @@
+{
+  "name": "@delivery-platform-lab/api",
+  "version": "1.0.0",
+  "description": "Delivery platform lab API — a simple Express API for CI/CD practice",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
+    "test:ci": "node --experimental-vm-modules node_modules/.bin/jest --coverage --ci --coverageReporters=text --coverageReporters=lcov"
+  },
+  "jest": {
+    "transform": {},
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.3.0",
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
+  }
+}
