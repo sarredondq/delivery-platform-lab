@@ -6,7 +6,7 @@ This directory contains documentation for each CI/CD tool used in the Delivery P
 
 | Tool | Status | Config Location | Notes |
 |------|--------|-----------------|-------|
-| Azure DevOps | Next | `pipelines/azure-devops/` | YAML pipelines defined in-repo |
+| Azure DevOps | Done | `pipelines/azure-devops/` | YAML pipelines defined in-repo |
 | GitHub Actions | Planned | `.github/workflows/` + `pipelines/github-actions/` | Workflow files must live in `.github/workflows/`; helper scripts and docs in `pipelines/` |
 | Jenkins | Planned | `pipelines/jenkins/` | Jenkinsfile-based pipelines |
 | CircleCI | Planned | `.circleci/config.yml` + `pipelines/circleci/` | Config must live at `.circleci/config.yml`; docs and orb configs in `pipelines/` |

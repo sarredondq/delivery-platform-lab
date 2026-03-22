@@ -1,0 +1,22 @@
+# CD Pipeline — Web
+# Trigger: Push to main that touches apps/web/
+# Purpose: Build the web app and publish dist/ as a deployable artifact
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - apps/web/**
+
+pr: none
+
+jobs:
+  - template: ../templates/jobs/build-artifact.yml
+    parameters:
+      appName: web
+      appPath: apps/web
+      artifactName: web-artifact
+      runBuild: true  # Web needs tsc + vite build
+      artifactPath: apps/web/dist  # Only publish the built output

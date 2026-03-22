@@ -1,0 +1,20 @@
+# CI Pipeline — Web
+# Trigger: Pull requests targeting main that touch apps/web/
+# Purpose: Install, test, build, verify code quality
+
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - apps/web/**
+
+jobs:
+  - template: ../templates/jobs/ci-node-app.yml
+    parameters:
+      appName: web
+      appPath: apps/web
+      runBuild: true  # Web app needs tsc + vite build

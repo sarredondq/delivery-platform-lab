@@ -1,0 +1,14 @@
+# Step template: Build application
+# Usage: Runs the build command in the specified working directory
+
+parameters:
+  - name: workingDirectory
+    type: string
+  - name: buildCommand
+    type: string
+    default: 'npm run build'
+
+steps:
+  - script: ${{ parameters.buildCommand }}
+    displayName: 'Build application'
+    workingDirectory: ${{ parameters.workingDirectory }}

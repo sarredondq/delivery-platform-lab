@@ -1,0 +1,36 @@
+# Job template: CI pipeline for a Node.js application
+# Usage: Installs deps, runs tests, and optionally builds the app
+
+parameters:
+  - name: appName
+    type: string
+  - name: appPath
+    type: string
+  - name: nodeVersion
+    type: string
+    default: '20.x'
+  - name: runBuild
+    type: boolean
+    default: false
+
+jobs:
+  - job: CI_${{ parameters.appName }}
+    displayName: 'CI — ${{ parameters.appName }}'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - checkout: self
+
+      - template: ../steps/install-node.yml
+        parameters:
+          nodeVersion: ${{ parameters.nodeVersion }}
+          workingDirectory: ${{ parameters.appPath }}
+
+      - template: ../steps/run-tests.yml
+        parameters:
+          workingDirectory: ${{ parameters.appPath }}
+
+      - ${{ if eq(parameters.runBuild, true) }}:
+          - template: ../steps/build-app.yml
+            parameters:
+              workingDirectory: ${{ parameters.appPath }}

@@ -1,0 +1,19 @@
+# Step template: Install Node.js and project dependencies
+# Usage: Reusable step for setting up Node.js environment with npm ci
+
+parameters:
+  - name: nodeVersion
+    type: string
+    default: '20.x'
+  - name: workingDirectory
+    type: string
+
+steps:
+  - task: NodeTool@0
+    displayName: 'Install Node.js ${{ parameters.nodeVersion }}'
+    inputs:
+      versionSpec: ${{ parameters.nodeVersion }}
+
+  - script: npm ci
+    displayName: 'Install dependencies (npm ci)'
+    workingDirectory: ${{ parameters.workingDirectory }}

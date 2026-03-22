@@ -1,0 +1,51 @@
+# Job template: Build and publish a deployable artifact
+# Usage: Installs deps, builds the app, and publishes a pipeline artifact
+
+parameters:
+  - name: appName
+    type: string
+  - name: appPath
+    type: string
+  - name: nodeVersion
+    type: string
+    default: '20.x'
+  - name: artifactName
+    type: string
+  - name: runBuild
+    type: boolean
+    default: false
+  - name: artifactPath
+    type: string
+    default: ''
+
+jobs:
+  - job: Build_${{ parameters.appName }}
+    displayName: 'Build artifact — ${{ parameters.appName }}'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - checkout: self
+
+      - template: ../steps/install-node.yml
+        parameters:
+          nodeVersion: ${{ parameters.nodeVersion }}
+          workingDirectory: ${{ parameters.appPath }}
+
+      # Only run build step if the app requires it (e.g., web apps with a compile step)
+      - ${{ if eq(parameters.runBuild, true) }}:
+          - template: ../steps/build-app.yml
+            parameters:
+              workingDirectory: ${{ parameters.appPath }}
+
+      # For API: prune dev dependencies to keep artifact lean
+      - ${{ if eq(parameters.runBuild, false) }}:
+          - script: npm prune --production
+            displayName: 'Remove dev dependencies'
+            workingDirectory: ${{ parameters.appPath }}
+
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish artifact — ${{ parameters.artifactName }}'
+        inputs:
+          targetPath: ${{ coalesce(parameters.artifactPath, parameters.appPath) }}
+          artifact: ${{ parameters.artifactName }}
+          publishLocation: 'pipeline'

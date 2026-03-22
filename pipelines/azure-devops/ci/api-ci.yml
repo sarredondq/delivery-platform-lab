@@ -1,0 +1,20 @@
+# CI Pipeline — API
+# Trigger: Pull requests targeting main that touch apps/api/
+# Purpose: Install, test, verify code quality
+
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - apps/api/**
+
+jobs:
+  - template: ../templates/jobs/ci-node-app.yml
+    parameters:
+      appName: api
+      appPath: apps/api
+      runBuild: false  # API is plain JS — no build step needed

@@ -1,0 +1,21 @@
+# CD Pipeline — API
+# Trigger: Push to main that touches apps/api/
+# Purpose: Build a deployable artifact with production dependencies
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - apps/api/**
+
+pr: none
+
+jobs:
+  - template: ../templates/jobs/build-artifact.yml
+    parameters:
+      appName: api
+      appPath: apps/api
+      artifactName: api-artifact
+      runBuild: false  # API is plain JS — no compile step

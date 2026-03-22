@@ -1,0 +1,27 @@
+# Step template: Run tests with coverage and publish results
+# Usage: Runs npm run test:ci and publishes test + coverage results
+
+parameters:
+  - name: workingDirectory
+    type: string
+
+steps:
+  - script: npm run test:ci
+    displayName: 'Run tests with coverage'
+    workingDirectory: ${{ parameters.workingDirectory }}
+
+  - task: PublishTestResults@2
+    displayName: 'Publish test results'
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/junit*.xml'
+      searchFolder: ${{ parameters.workingDirectory }}
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish code coverage'
+    condition: succeededOrFailed()
+    inputs:
+      summaryFileLocation: '${{ parameters.workingDirectory }}/coverage/lcov.info'

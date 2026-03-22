@@ -1,0 +1,139 @@
+# Release Pipeline
+# Trigger: Git tags matching v* (e.g., v1.0.0, v2.3.1-beta)
+# Also supports manual trigger via the Azure DevOps UI
+# Purpose: Validate artifacts and deploy to cloud environments
+
+trigger:
+  tags:
+    include:
+      - v*
+
+pr: none
+
+# TODO: Add resources.pipelines to consume artifacts from api-cd and web-cd
+#       once those pipelines are registered in Azure DevOps:
+#
+# resources:
+#   pipelines:
+#     - pipeline: api-cd
+#       source: 'api-cd'
+#       trigger: true
+#     - pipeline: web-cd
+#       source: 'web-cd'
+#       trigger: true
+
+stages:
+  # ──────────────────────────────────────────────
+  # Stage 1: Validate
+  # ──────────────────────────────────────────────
+  - stage: Validate
+    displayName: 'Validate release'
+    jobs:
+      - job: SmokeTest
+        displayName: 'Run smoke tests'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          # TODO: Replace with actual artifact download once resources.pipelines is configured
+          # - task: DownloadPipelineArtifact@2
+          #   inputs:
+          #     buildType: 'specific'
+          #     project: '$(System.TeamProjectId)'
+          #     pipeline: 'api-cd'
+          #     artifactName: 'api-artifact'
+          #     targetPath: '$(Pipeline.Workspace)/api'
+
+          # - task: DownloadPipelineArtifact@2
+          #   inputs:
+          #     buildType: 'specific'
+          #     project: '$(System.TeamProjectId)'
+          #     pipeline: 'web-cd'
+          #     artifactName: 'web-artifact'
+          #     targetPath: '$(Pipeline.Workspace)/web'
+
+          - script: |
+              echo "========================================="
+              echo "  Smoke Tests — Release $(Build.SourceBranchName)"
+              echo "========================================="
+              echo "Tag: $(Build.SourceBranch)"
+              echo ""
+              echo "TODO: Download artifacts from api-cd and web-cd pipelines"
+              echo "TODO: Run health check against API artifact"
+              echo "TODO: Verify web artifact contains index.html"
+              echo ""
+              echo "Smoke tests passed (placeholder)"
+            displayName: 'Run smoke tests (placeholder)'
+
+  # ──────────────────────────────────────────────
+  # Stage 2: Deploy to Cloud
+  # ──────────────────────────────────────────────
+  - stage: DeployToCloud
+    displayName: 'Deploy to cloud'
+    dependsOn: Validate
+    condition: succeeded()
+    jobs:
+      # ── AWS ──
+      - job: DeployAWS
+        displayName: 'Deploy to AWS'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              echo "========================================="
+              echo "  Deploying to AWS..."
+              echo "========================================="
+              echo "Tag: $(Build.SourceBranchName)"
+              echo ""
+              echo "TODO: Configure AWS service connection"
+              echo "TODO: Deploy API to ECS/Lambda/EKS"
+              echo "TODO: Deploy Web to S3 + CloudFront"
+              echo "TODO: Run post-deploy health checks"
+            displayName: 'Deploy to AWS (placeholder)'
+            # TODO: Replace with actual AWS deployment steps:
+            # - Use AWS CLI task or Terraform/Pulumi
+            # - Reference IaC from infra/aws/
+            # - Use Azure DevOps service connection for AWS credentials
+
+      # ── Azure ──
+      - job: DeployAzure
+        displayName: 'Deploy to Azure'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              echo "========================================="
+              echo "  Deploying to Azure..."
+              echo "========================================="
+              echo "Tag: $(Build.SourceBranchName)"
+              echo ""
+              echo "TODO: Configure Azure service connection"
+              echo "TODO: Deploy API to App Service/Container Apps/AKS"
+              echo "TODO: Deploy Web to Static Web Apps / Blob Storage + CDN"
+              echo "TODO: Run post-deploy health checks"
+            displayName: 'Deploy to Azure (placeholder)'
+            # TODO: Replace with actual Azure deployment steps:
+            # - Use AzureCLI@2 task or Terraform/Pulumi
+            # - Reference IaC from infra/azure/
+            # - Use Azure DevOps service connection (managed identity recommended)
+
+      # ── GCP ──
+      - job: DeployGCP
+        displayName: 'Deploy to GCP'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              echo "========================================="
+              echo "  Deploying to GCP..."
+              echo "========================================="
+              echo "Tag: $(Build.SourceBranchName)"
+              echo ""
+              echo "TODO: Configure GCP service connection"
+              echo "TODO: Deploy API to Cloud Run/GKE"
+              echo "TODO: Deploy Web to Cloud Storage + Cloud CDN"
+              echo "TODO: Run post-deploy health checks"
+            displayName: 'Deploy to GCP (placeholder)'
+            # TODO: Replace with actual GCP deployment steps:
+            # - Use gcloud CLI or Terraform/Pulumi
+            # - Reference IaC from infra/gcp/
+            # - Use Workload Identity Federation for GCP credentials
