@@ -1,0 +1,26 @@
+# Composite Action: Run Tests with Coverage
+# Usage: Reusable action for running tests and uploading coverage artifacts
+# Equivalent to Azure DevOps template: pipelines/azure-devops/templates/steps/run-tests.yml
+
+name: 'Run Tests with Coverage'
+description: 'Run test:ci script and upload coverage as an artifact'
+
+inputs:
+  working-directory:
+    description: 'Path to the application directory (e.g., apps/api)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run tests with coverage
+      run: npm run test:ci
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: coverage-${{ inputs.working-directory }}
+        path: ${{ inputs.working-directory }}/coverage

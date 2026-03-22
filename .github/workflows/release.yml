@@ -1,0 +1,123 @@
+# Release Pipeline
+# Trigger: Git tags matching v* (e.g., v1.0.0, v2.3.1-beta) or manual dispatch
+# Purpose: Validate artifacts and deploy to cloud environments
+# Equivalent to: pipelines/azure-devops/release/release.yml
+
+name: 'Release'
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  # ──────────────────────────────────────────────
+  # Job 1: Validate
+  # ──────────────────────────────────────────────
+  validate:
+    name: Validate Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download API artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: api-artifact
+          path: artifacts/api
+        # TODO: In a real setup, use workflow_run or a shared artifact store
+        #       since cross-workflow artifact sharing requires additional config
+        continue-on-error: true
+
+      - name: Download Web artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-artifact
+          path: artifacts/web
+        continue-on-error: true
+
+      - name: Run smoke tests (placeholder)
+        run: |
+          echo "========================================="
+          echo "  Smoke Tests — Release ${{ github.ref_name }}"
+          echo "========================================="
+          echo "Ref: ${{ github.ref }}"
+          echo ""
+          echo "TODO: Download artifacts from api-cd and web-cd workflows"
+          echo "TODO: Run health check against API artifact"
+          echo "TODO: Verify web artifact contains index.html"
+          echo ""
+          echo "Smoke tests passed (placeholder)"
+
+  # ──────────────────────────────────────────────
+  # Job 2-4: Deploy to Cloud (parallel)
+  # ──────────────────────────────────────────────
+
+  # ── AWS ──
+  deploy-aws:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+      - name: Deploy to AWS (placeholder)
+        run: |
+          echo "========================================="
+          echo "  Deploying to AWS..."
+          echo "========================================="
+          echo "Tag: ${{ github.ref_name }}"
+          echo ""
+          echo "TODO: Configure AWS credentials (use aws-actions/configure-aws-credentials)"
+          echo "TODO: Deploy API to ECS/Lambda/EKS"
+          echo "TODO: Deploy Web to S3 + CloudFront"
+          echo "TODO: Run post-deploy health checks"
+        # TODO: Replace with actual AWS deployment steps:
+        # - uses: aws-actions/configure-aws-credentials@v4
+        # - Reference IaC from infra/aws/
+        # - Use GitHub Secrets for AWS credentials or OIDC federation
+
+  # ── Azure ──
+  deploy-azure:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+      - name: Deploy to Azure (placeholder)
+        run: |
+          echo "========================================="
+          echo "  Deploying to Azure..."
+          echo "========================================="
+          echo "Tag: ${{ github.ref_name }}"
+          echo ""
+          echo "TODO: Configure Azure credentials (use azure/login)"
+          echo "TODO: Deploy API to App Service/Container Apps/AKS"
+          echo "TODO: Deploy Web to Static Web Apps / Blob Storage + CDN"
+          echo "TODO: Run post-deploy health checks"
+        # TODO: Replace with actual Azure deployment steps:
+        # - uses: azure/login@v2
+        # - Reference IaC from infra/azure/
+        # - Use GitHub Secrets or OIDC for Azure credentials
+
+  # ── GCP ──
+  deploy-gcp:
+    name: Deploy to GCP
+    runs-on: ubuntu-latest
+    needs: validate
+
+    steps:
+      - name: Deploy to GCP (placeholder)
+        run: |
+          echo "========================================="
+          echo "  Deploying to GCP..."
+          echo "========================================="
+          echo "Tag: ${{ github.ref_name }}"
+          echo ""
+          echo "TODO: Configure GCP credentials (use google-github-actions/auth)"
+          echo "TODO: Deploy API to Cloud Run/GKE"
+          echo "TODO: Deploy Web to Cloud Storage + Cloud CDN"
+          echo "TODO: Run post-deploy health checks"
+        # TODO: Replace with actual GCP deployment steps:
+        # - uses: google-github-actions/auth@v2
+        # - Reference IaC from infra/gcp/
+        # - Use Workload Identity Federation for GCP credentials

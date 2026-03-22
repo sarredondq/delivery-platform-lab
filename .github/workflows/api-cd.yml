@@ -1,0 +1,36 @@
+# CD Pipeline — API
+# Trigger: Push to main that touches apps/api/
+# Purpose: Build a deployable artifact with production dependencies
+# Equivalent to: pipelines/azure-devops/cd/api-cd.yml
+
+name: 'API - Continuous Delivery'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+
+jobs:
+  build:
+    name: Build Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and install production dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install production dependencies only
+        run: npm ci --omit=dev
+        working-directory: apps/api
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-artifact
+          path: apps/api/

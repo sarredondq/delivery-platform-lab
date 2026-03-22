@@ -1,0 +1,30 @@
+# Composite Action: Setup Node.js Application
+# Usage: Reusable action for setting up Node.js environment with npm ci
+# Equivalent to Azure DevOps template: pipelines/azure-devops/templates/steps/install-node.yml
+
+name: 'Setup Node.js Application'
+description: 'Install Node.js and project dependencies using npm ci'
+
+inputs:
+  node-version:
+    description: 'Node.js version to install'
+    required: false
+    default: '20'
+  working-directory:
+    description: 'Path to the application directory (e.g., apps/api)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+    - name: Install dependencies (npm ci)
+      run: npm ci
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
