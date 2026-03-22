@@ -1,0 +1,31 @@
+# CI Pipeline — API
+# Trigger: Pull requests targeting main that touch apps/api/
+# Purpose: Install, test, verify code quality
+# Equivalent to: pipelines/azure-devops/ci/api-ci.yml
+
+name: 'API - Continuous Integration'
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and install dependencies
+        uses: ./.github/actions/setup-node-app
+        with:
+          working-directory: apps/api
+
+      - name: Run tests with coverage
+        uses: ./.github/actions/run-tests
+        with:
+          working-directory: apps/api

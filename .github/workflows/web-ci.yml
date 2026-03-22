@@ -1,0 +1,35 @@
+# CI Pipeline — Web
+# Trigger: Pull requests targeting main that touch apps/web/
+# Purpose: Install, test, verify code quality, verify build
+# Equivalent to: pipelines/azure-devops/ci/web-ci.yml
+
+name: 'Web - Continuous Integration'
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+
+jobs:
+  test:
+    name: Test & Build Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and install dependencies
+        uses: ./.github/actions/setup-node-app
+        with:
+          working-directory: apps/web
+
+      - name: Run tests with coverage
+        uses: ./.github/actions/run-tests
+        with:
+          working-directory: apps/web
+
+      - name: Verify build
+        run: npm run build
+        working-directory: apps/web
