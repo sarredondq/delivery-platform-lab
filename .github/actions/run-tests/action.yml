@@ -18,9 +18,14 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
+    - name: Sanitize artifact name
+      id: sanitize
+      run: echo "artifact-name=$(echo '${{ inputs.working-directory }}' | tr '/' '-')" >> $GITHUB_OUTPUT
+      shell: bash
+
     - name: Upload coverage report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       if: always()
       with:
-        name: coverage-${{ inputs.working-directory }}
+        name: coverage-${{ steps.sanitize.outputs.artifact-name }}
         path: ${{ inputs.working-directory }}/coverage

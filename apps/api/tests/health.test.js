@@ -30,6 +30,10 @@ describe("404 handler", () => {
 
 describe("Error handler", () => {
   it("should return 500 on malformed JSON body", async () => {
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
     const res = await request(app)
       .post("/health")
       .set("Content-Type", "application/json")
@@ -37,5 +41,7 @@ describe("Error handler", () => {
 
     expect(res.status).toBe(500);
     expect(res.body).toEqual({ error: "Internal server error" });
+
+    consoleSpy.mockRestore();
   });
 });
