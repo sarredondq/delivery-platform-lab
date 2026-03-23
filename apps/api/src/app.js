@@ -3,6 +3,8 @@ import cors from "cors";
 import express from "express";
 import healthRouter from "./routes/health.js";
 import infoRouter from "./routes/info.js";
+import deploymentsRouter from "./routes/deployments.js";
+import metricsRouter from "./routes/metrics.js";
 
 const app = express();
 
@@ -11,6 +13,8 @@ app.use(express.json());
 
 app.use(healthRouter);
 app.use(infoRouter);
+app.use('/deployments', deploymentsRouter);
+app.use('/metrics', metricsRouter);
 
 // 404 handler
 app.use((_req, res) => {

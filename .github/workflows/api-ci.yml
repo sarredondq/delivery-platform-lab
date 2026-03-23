@@ -1,5 +1,5 @@
 # CI Pipeline — API
-# Trigger: Push to main or pull requests targeting main that touch apps/api/
+# Trigger: Push to main that touches apps/api/
 # Purpose: Install, test, SonarCloud analysis, verify code quality
 # Equivalent to: pipelines/azure-devops/ci/api-ci.yml
 
@@ -7,10 +7,6 @@ name: 'API - Continuous Integration'
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'apps/api/**'
-  pull_request:
     branches: [main]
     paths:
       - 'apps/api/**'

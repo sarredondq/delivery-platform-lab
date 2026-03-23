@@ -1,35 +1,41 @@
-// CI trigger test
-import { useEffect, useState } from "react";
-
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
-
-type HealthStatus = "loading" | "ok" | "unavailable";
+import { HealthIndicator } from './components/HealthIndicator';
+import { MetricsCards } from './components/MetricsCards';
+import { DeploymentForm } from './components/DeploymentForm';
+import { DeploymentList } from './components/DeploymentList';
+import { useDeployments } from './hooks/useDeployments';
+import { useMetrics } from './hooks/useMetrics';
 
 function App() {
-  const [status, setStatus] = useState<HealthStatus>("loading");
-
-  useEffect(() => {
-    fetch(`${API_URL}/health`)
-      .then((res) => {
-        if (res.ok) {
-          setStatus("ok");
-        } else {
-          setStatus("unavailable");
-        }
-      })
-      .catch(() => {
-        setStatus("unavailable");
-      });
-  }, []);
+  const { deployments, loading, error, create, remove } = useDeployments();
+  const { metrics, loading: metricsLoading, error: metricsError } = useMetrics();
 
   return (
     <div className="app">
-      <h1>Delivery Platform Lab</h1>
-      <p className="status" role="status">
-        {status === "loading" && "API Status: Checking..."}
-        {status === "ok" && "API Status: OK"}
-        {status === "unavailable" && "API Status: Unavailable"}
-      </p>
+      <header className="app-header">
+        <h1>Delivery Platform Lab</h1>
+        <HealthIndicator />
+      </header>
+
+      <main className="app-main">
+        <section className="section-metrics">
+          <MetricsCards metrics={metrics} loading={metricsLoading} error={metricsError} />
+        </section>
+
+        <div className="content-grid">
+          <section className="section-form">
+            <DeploymentForm onSubmit={create} />
+          </section>
+
+          <section className="section-list">
+            <DeploymentList
+              deployments={deployments}
+              loading={loading}
+              error={error}
+              onDelete={remove}
+            />
+          </section>
+        </div>
+      </main>
     </div>
   );
 }
