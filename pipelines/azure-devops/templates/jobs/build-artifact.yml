@@ -37,10 +37,10 @@ jobs:
             parameters:
               workingDirectory: ${{ parameters.appPath }}
 
-      # For API: prune dev dependencies to keep artifact lean
+      # For API: clean install without dev dependencies to keep artifact lean
       - ${{ if eq(parameters.runBuild, false) }}:
-          - script: npm prune --production
-            displayName: 'Remove dev dependencies'
+          - script: npm ci --omit=dev
+            displayName: 'Install production dependencies only'
             workingDirectory: ${{ parameters.appPath }}
 
       - task: PublishPipelineArtifact@1

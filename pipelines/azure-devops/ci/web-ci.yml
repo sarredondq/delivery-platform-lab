@@ -18,5 +18,6 @@ jobs:
       appName: web
       appPath: apps/web
       runBuild: true
-      sonarProjectKey: ghactions-delivery-platform-web
-      sonarProjectName: ghactions-delivery-platform-web
+      sonarProjectKey: azdevops-delivery-platform-web
+      sonarProjectName: azdevops-delivery-platform-web
+      sonarTests: apps/web/src/__tests__

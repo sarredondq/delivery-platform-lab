@@ -18,5 +18,6 @@ jobs:
       appName: api
       appPath: apps/api
       runBuild: false
-      sonarProjectKey: ghactions-delivery-platform-api
-      sonarProjectName: ghactions-delivery-platform-api
+      sonarProjectKey: azdevops-delivery-platform-api
+      sonarProjectName: azdevops-delivery-platform-api
+      sonarTests: apps/api/tests

@@ -4,6 +4,8 @@
 parameters:
   - name: workingDirectory
     type: string
+  - name: appName
+    type: string
 
 steps:
   - script: npm run test:ci
@@ -25,3 +27,11 @@ steps:
     condition: succeededOrFailed()
     inputs:
       summaryFileLocation: '${{ parameters.workingDirectory }}/coverage/lcov.info'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Upload coverage artifact'
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: '${{ parameters.workingDirectory }}/coverage'
+      artifact: 'coverage-${{ parameters.appName }}'
+      publishLocation: 'pipeline'
