@@ -15,6 +15,7 @@ router.get("/info", (_req, res) => {
     name: "delivery-platform-lab-api",
     version: pkg.version,
     environment: process.env.NODE_ENV || "development",
+    description: "CI/CD and multi-cloud deployment learning lab",
   });
 });
 
