@@ -1,11 +1,15 @@
 # CI Pipeline — Web
-# Trigger: Pull requests targeting main that touch apps/web/
+# Trigger: Push to main or pull requests targeting main that touch apps/web/
 # Purpose: Install, test, SonarCloud analysis, build, verify code quality
 # Equivalent to: pipelines/azure-devops/ci/web-ci.yml
 
 name: 'Web - Continuous Integration'
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
   pull_request:
     branches: [main]
     paths:
