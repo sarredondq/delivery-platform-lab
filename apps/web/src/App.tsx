@@ -24,7 +24,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Delivery Platform Lab</h1>
+      <h1>Delivery Platform Lab <span className="version">v1.1</span></h1>
       <p className="status" role="status">
         {status === "loading" && "API Status: Checking..."}
         {status === "ok" && "API Status: OK"}
