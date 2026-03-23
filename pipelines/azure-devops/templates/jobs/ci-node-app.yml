@@ -18,6 +18,9 @@ parameters:
   - name: sonarProjectName
     type: string
     default: ''
+  - name: sonarTests
+    type: string
+    default: ''
 
 jobs:
   - job: CI_${{ parameters.appName }}
@@ -35,13 +38,15 @@ jobs:
 
       - template: ../steps/run-tests.yml
         parameters:
+          appName: ${{ parameters.appName }}
           workingDirectory: ${{ parameters.appPath }}
 
       - ${{ if ne(parameters.sonarProjectKey, '') }}:
           - template: ../steps/sonar-analysis.yml
             parameters:
-              projectKey: ${{ parameters.sonarProjectKey }}
-              projectName: ${{ parameters.sonarProjectName }}
+              sonarProjectKey: ${{ parameters.sonarProjectKey }}
+              sonarProjectName: ${{ parameters.sonarProjectName }}
+              sonarTests: ${{ parameters.sonarTests }}
               workingDirectory: ${{ parameters.appPath }}
 
       - ${{ if eq(parameters.runBuild, true) }}:

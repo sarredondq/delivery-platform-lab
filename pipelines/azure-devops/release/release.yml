@@ -2,6 +2,12 @@
 # Trigger: Git tags matching v* (e.g., v1.0.0, v2.3.1-beta)
 # Also supports manual trigger via the Azure DevOps UI
 # Purpose: Validate artifacts and deploy to cloud environments
+#
+# NOTE — Manual trigger (workflow_dispatch equivalent):
+# GitHub Actions uses `workflow_dispatch` to allow manual pipeline runs from the UI.
+# In Azure DevOps there is no explicit YAML keyword for this — instead, any pipeline
+# can be triggered manually via the "Run pipeline" button in the ADO UI.
+# No extra configuration is needed; this button is always available.
 
 trigger:
   tags:
