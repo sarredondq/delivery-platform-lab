@@ -1,6 +1,6 @@
 # Step template: Run SonarCloud analysis
 # Usage: Prepares, runs, and publishes SonarCloud analysis
-# Requires: SonarCloud service connection named 'SonarCloud' in Azure DevOps
+# Requires: SonarCloud service connection named 'SonarCloudServiceConnection' in Azure DevOps
 
 parameters:
   - name: sonarProjectKey
@@ -19,7 +19,7 @@ steps:
   - task: SonarCloudPrepare@3
     displayName: 'SonarCloud — Prepare analysis'
     inputs:
-      SonarCloud: 'SonarCloud'
+      SonarCloud: 'SonarCloudServiceConnection'
       organization: '${{ parameters.organization }}'
       scannerMode: 'CLI'
       configMode: 'manual'
